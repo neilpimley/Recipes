@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="05a97d9878984c19baff61960ba0f2d1" Name="Diagram1">
+        <EntityTypeShape EntityType="ConstructionDBModel.Day" Width="1.5" PointX="2.75" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConstructionDBModel.Week" Width="1.5" PointX="0.625" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConstructionDBModel.Worker" Width="1.5" PointX="5.25" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConstructionDBModel.WorkedDay" Width="1.5" PointX="3.5" PointY="6" />
+        <AssociationConnector Association="ConstructionDBModel.FK_workedday_weeks" />
+        <AssociationConnector Association="ConstructionDBModel.FK_workedday_worker" />
+        <AssociationConnector Association="ConstructionDBModel.FK_workedday_day" />
+        <EntityTypeShape EntityType="ConstructionDBModel.Site" Width="1.5" PointX="2.75" PointY="1.375" />
+        <AssociationConnector Association="ConstructionDBModel.FK_workedday_site" />
+        <EntityTypeShape EntityType="ConstructionDBModel.User" Width="1.5" PointX="7.375" PointY="1.75" />
+        <EntityTypeShape EntityType="ConstructionDBModel.Supplier" Width="1.5" PointX="7.25" PointY="7.875" />
+        <EntityTypeShape EntityType="ConstructionDBModel.Material" Width="1.5" PointX="7.25" PointY="4" />
+        <AssociationConnector Association="ConstructionDBModel.FK_Material_ToSite" />
+        <AssociationConnector Association="ConstructionDBModel.FK_Material_ToSupplier" />
+        <AssociationConnector Association="ConstructionDBModel.FK_Material_ToWeek" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

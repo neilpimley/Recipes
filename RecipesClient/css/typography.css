@@ -1,0 +1,11 @@
+﻿html, body { 
+    font-family: 'Roboto Condensed', sans-serif;
+}
+.page-container { margin-top: 50px; }
+.btn {
+    border-radius: 0;
+    border: none;        
+   color: #fff 
+}
+.btn-tiny { padding: 2px 5px; }
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th { padding: 4px; }

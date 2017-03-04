@@ -1,0 +1,515 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ConstructionDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Days">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Day" Type="nvarchar" MaxLength="8" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Materials">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="SupplierId" Type="int" Nullable="false" />
+          <Property Name="NetValue" Type="decimal" Precision="6" Scale="2" Nullable="false" />
+          <Property Name="Value" Type="decimal" Precision="6" Scale="2" Nullable="false" />
+          <Property Name="VAT" Type="decimal" Precision="6" Scale="2" Nullable="false" />
+          <Property Name="WeekId" Type="int" Nullable="false" />
+          <Property Name="SiteId" Type="int" Nullable="false" />
+          <Property Name="Paid" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Sites">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SiteName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="BgColour" Type="nchar" MaxLength="7" />
+          <Property Name="FgColour" Type="nchar" MaxLength="7" />
+        </EntityType>
+        <EntityType Name="Suppliers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="50" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmailAddress" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Weeks">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WkNum" Type="int" Nullable="false" />
+          <Property Name="Year" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WorkedDay">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WorkerId" Type="int" Nullable="false" />
+          <Property Name="SiteId" Type="int" Nullable="false" />
+          <Property Name="WeekId" Type="int" Nullable="false" />
+          <Property Name="DayId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Workers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="150" />
+          <Property Name="Rate" Type="numeric" Precision="5" Scale="2" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Material_ToSite">
+          <End Role="Sites" Type="Self.Sites" Multiplicity="1" />
+          <End Role="Materials" Type="Self.Materials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sites">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Materials">
+              <PropertyRef Name="SiteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Material_ToSupplier">
+          <End Role="Suppliers" Type="Self.Suppliers" Multiplicity="1" />
+          <End Role="Materials" Type="Self.Materials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Suppliers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Materials">
+              <PropertyRef Name="SupplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Material_ToWeek">
+          <End Role="Weeks" Type="Self.Weeks" Multiplicity="1" />
+          <End Role="Materials" Type="Self.Materials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Weeks">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Materials">
+              <PropertyRef Name="WeekId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_workedday_day">
+          <End Role="Days" Type="Self.Days" Multiplicity="1" />
+          <End Role="WorkedDay" Type="Self.WorkedDay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Days">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkedDay">
+              <PropertyRef Name="DayId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_workedday_site">
+          <End Role="Sites" Type="Self.Sites" Multiplicity="1" />
+          <End Role="WorkedDay" Type="Self.WorkedDay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sites">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkedDay">
+              <PropertyRef Name="SiteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_workedday_weeks">
+          <End Role="Weeks" Type="Self.Weeks" Multiplicity="1" />
+          <End Role="WorkedDay" Type="Self.WorkedDay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Weeks">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkedDay">
+              <PropertyRef Name="WeekId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_workedday_worker">
+          <End Role="Workers" Type="Self.Workers" Multiplicity="1" />
+          <End Role="WorkedDay" Type="Self.WorkedDay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Workers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkedDay">
+              <PropertyRef Name="WorkerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ConstructionDBModelStoreContainer">
+          <EntitySet Name="Days" EntityType="Self.Days" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Materials" EntityType="Self.Materials" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sites" EntityType="Self.Sites" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Suppliers" EntityType="Self.Suppliers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Weeks" EntityType="Self.Weeks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WorkedDay" EntityType="Self.WorkedDay" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Workers" EntityType="Self.Workers" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Material_ToSite" Association="Self.FK_Material_ToSite">
+            <End Role="Sites" EntitySet="Sites" />
+            <End Role="Materials" EntitySet="Materials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Material_ToSupplier" Association="Self.FK_Material_ToSupplier">
+            <End Role="Suppliers" EntitySet="Suppliers" />
+            <End Role="Materials" EntitySet="Materials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Material_ToWeek" Association="Self.FK_Material_ToWeek">
+            <End Role="Weeks" EntitySet="Weeks" />
+            <End Role="Materials" EntitySet="Materials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_workedday_day" Association="Self.FK_workedday_day">
+            <End Role="Days" EntitySet="Days" />
+            <End Role="WorkedDay" EntitySet="WorkedDay" />
+          </AssociationSet>
+          <AssociationSet Name="FK_workedday_site" Association="Self.FK_workedday_site">
+            <End Role="Sites" EntitySet="Sites" />
+            <End Role="WorkedDay" EntitySet="WorkedDay" />
+          </AssociationSet>
+          <AssociationSet Name="FK_workedday_weeks" Association="Self.FK_workedday_weeks">
+            <End Role="Weeks" EntitySet="Weeks" />
+            <End Role="WorkedDay" EntitySet="WorkedDay" />
+          </AssociationSet>
+          <AssociationSet Name="FK_workedday_worker" Association="Self.FK_workedday_worker">
+            <End Role="Workers" EntitySet="Workers" />
+            <End Role="WorkedDay" EntitySet="WorkedDay" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ConstructionDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Day">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="DayName" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Week">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WkNum" Type="Int32" Nullable="false" />
+          <Property Name="Year" Type="Int32" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Worker">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Rate" Type="Decimal" Precision="5" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="ConstructionDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Days" EntityType="Self.Day" />
+          <EntitySet Name="Weeks" EntityType="Self.Week" />
+          <EntitySet Name="Workers" EntityType="Self.Worker" />
+          <EntitySet Name="WorkedDays" EntityType="ConstructionDBModel.WorkedDay" />
+          <AssociationSet Name="FK_workedday_weeks" Association="ConstructionDBModel.FK_workedday_weeks">
+            <End Role="Week" EntitySet="Weeks" />
+            <End Role="WorkedDay" EntitySet="WorkedDays" />
+          </AssociationSet>
+          <AssociationSet Name="FK_workedday_worker" Association="ConstructionDBModel.FK_workedday_worker">
+            <End Role="Worker" EntitySet="Workers" />
+            <End Role="WorkedDay" EntitySet="WorkedDays" />
+          </AssociationSet>
+          <AssociationSet Name="FK_workedday_day" Association="ConstructionDBModel.FK_workedday_day">
+            <End Role="Day" EntitySet="Days" />
+            <End Role="WorkedDay" EntitySet="WorkedDays" />
+          </AssociationSet>
+          <EntitySet Name="Sites" EntityType="ConstructionDBModel.Site" />
+          <AssociationSet Name="FK_workedday_site" Association="ConstructionDBModel.FK_workedday_site">
+            <End Role="Site" EntitySet="Sites" />
+            <End Role="WorkedDay" EntitySet="WorkedDays" />
+          </AssociationSet>
+          <EntitySet Name="Users" EntityType="ConstructionDBModel.User" />
+          <EntitySet Name="Suppliers" EntityType="ConstructionDBModel.Supplier" />
+          <EntitySet Name="Materials" EntityType="ConstructionDBModel.Material" />
+          <AssociationSet Name="FK_Material_ToSite" Association="ConstructionDBModel.FK_Material_ToSite">
+            <End Role="Site" EntitySet="Sites" />
+            <End Role="Material" EntitySet="Materials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Material_ToSupplier" Association="ConstructionDBModel.FK_Material_ToSupplier">
+            <End Role="Supplier" EntitySet="Suppliers" />
+            <End Role="Material" EntitySet="Materials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Material_ToWeek" Association="ConstructionDBModel.FK_Material_ToWeek">
+            <End Role="Week" EntitySet="Weeks" />
+            <End Role="Material" EntitySet="Materials" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="WorkedDay">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkerId" Type="Int32" Nullable="false" />
+          <Property Name="SiteId" Type="Int32" Nullable="false" />
+          <Property Name="WeekId" Type="Int32" Nullable="false" />
+          <Property Name="DayId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_workedday_weeks">
+          <End Type="ConstructionDBModel.Week" Role="Week" Multiplicity="1" />
+          <End Type="ConstructionDBModel.WorkedDay" Role="WorkedDay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Week">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkedDay">
+              <PropertyRef Name="WeekId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_workedday_worker">
+          <End Type="ConstructionDBModel.Worker" Role="Worker" Multiplicity="1" />
+          <End Type="ConstructionDBModel.WorkedDay" Role="WorkedDay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Worker">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkedDay">
+              <PropertyRef Name="WorkerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_workedday_day">
+          <End Type="ConstructionDBModel.Day" Role="Day" Multiplicity="1" />
+          <End Type="ConstructionDBModel.WorkedDay" Role="WorkedDay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Day">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkedDay">
+              <PropertyRef Name="DayId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Site">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SiteName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="BgColour" Type="String" MaxLength="7" FixedLength="true" Unicode="true" />
+          <Property Name="FgColour" Type="String" MaxLength="7" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_workedday_site">
+          <End Type="ConstructionDBModel.Site" Role="Site" Multiplicity="1" />
+          <End Type="ConstructionDBModel.WorkedDay" Role="WorkedDay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Site">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkedDay">
+              <PropertyRef Name="SiteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmailAddress" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Supplier">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Material">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="SupplierId" Type="Int32" Nullable="false" />
+          <Property Name="NetValue" Type="Decimal" Nullable="false" Precision="6" Scale="2" />
+          <Property Name="Value" Type="Decimal" Nullable="false" Precision="6" Scale="2" />
+          <Property Name="VAT" Type="Decimal" Nullable="false" Precision="6" Scale="2" />
+          <Property Name="WeekId" Type="Int32" Nullable="false" />
+          <Property Name="SiteId" Type="Int32" Nullable="false" />
+          <Property Name="Paid" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Material_ToSite">
+          <End Type="ConstructionDBModel.Site" Role="Site" Multiplicity="1" />
+          <End Type="ConstructionDBModel.Material" Role="Material" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Site">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Material">
+              <PropertyRef Name="SiteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Material_ToSupplier">
+          <End Type="ConstructionDBModel.Supplier" Role="Supplier" Multiplicity="1" />
+          <End Type="ConstructionDBModel.Material" Role="Material" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Material">
+              <PropertyRef Name="SupplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Material_ToWeek">
+          <End Type="ConstructionDBModel.Week" Role="Week" Multiplicity="1" />
+          <End Type="ConstructionDBModel.Material" Role="Material" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Week">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Material">
+              <PropertyRef Name="WeekId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ConstructionDBModelStoreContainer" CdmEntityContainer="ConstructionDBEntities">
+          <EntitySetMapping Name="Days">
+            <EntityTypeMapping TypeName="ConstructionDBModel.Day">
+              <MappingFragment StoreEntitySet="Days">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="DayName" ColumnName="Day" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Weeks">
+            <EntityTypeMapping TypeName="ConstructionDBModel.Week">
+              <MappingFragment StoreEntitySet="Weeks">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="WkNum" ColumnName="WkNum" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Workers">
+            <EntityTypeMapping TypeName="ConstructionDBModel.Worker">
+              <MappingFragment StoreEntitySet="Workers">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Rate" ColumnName="Rate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkedDays">
+            <EntityTypeMapping TypeName="ConstructionDBModel.WorkedDay">
+              <MappingFragment StoreEntitySet="WorkedDay">
+                <ScalarProperty Name="DayId" ColumnName="DayId" />
+                <ScalarProperty Name="WeekId" ColumnName="WeekId" />
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
+                <ScalarProperty Name="WorkerId" ColumnName="WorkerId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sites">
+            <EntityTypeMapping TypeName="ConstructionDBModel.Site">
+              <MappingFragment StoreEntitySet="Sites">
+                <ScalarProperty Name="FgColour" ColumnName="FgColour" />
+                <ScalarProperty Name="BgColour" ColumnName="BgColour" />
+                <ScalarProperty Name="SiteName" ColumnName="SiteName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="ConstructionDBModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Suppliers">
+            <EntityTypeMapping TypeName="ConstructionDBModel.Supplier">
+              <MappingFragment StoreEntitySet="Suppliers">
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Materials">
+            <EntityTypeMapping TypeName="ConstructionDBModel.Material">
+              <MappingFragment StoreEntitySet="Materials">
+                <ScalarProperty Name="Paid" ColumnName="Paid" />
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
+                <ScalarProperty Name="WeekId" ColumnName="WeekId" />
+                <ScalarProperty Name="VAT" ColumnName="VAT" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="NetValue" ColumnName="NetValue" />
+                <ScalarProperty Name="SupplierId" ColumnName="SupplierId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
