@@ -24,10 +24,14 @@
   <ItemGroup>
     <Content Include="css\typography.css" />
     <Content Include="gulpfile.js" />
+    <Content Include="images\brunch.jpg" />
     <Content Include="images\gears.gif" />
     <Content Include="images\loader.gif" />
     <Content Include="images\logo_grey_services.png" />
+    <Content Include="images\maple-glazed-brioche-bun.jpg" />
+    <Content Include="images\milk-rolls-with-bacon.jpg" />
     <Content Include="images\sign-in-with-google.png" />
+    <Content Include="images\smoked-ham-cheese-pancakes.jpg" />
     <Content Include="index.html" />
     <Content Include="rollup-config.js" />
     <Content Include="web.config" />
@@ -38,6 +42,7 @@
     <TypeScriptCompile Include="app\app.component.ts" />
     <TypeScriptCompile Include="app\app.module.ts" />
     <TypeScriptCompile Include="app\components\login.component.ts" />
+    <TypeScriptCompile Include="app\components\recipe-detail.component.ts" />
     <TypeScriptCompile Include="app\components\recipes-list.component.spec.ts" />
     <TypeScriptCompile Include="app\components\recipes-list.component.ts" />
     <TypeScriptCompile Include="app\config\auth.config.ts" />

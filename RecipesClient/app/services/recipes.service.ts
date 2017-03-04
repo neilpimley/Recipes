@@ -11,8 +11,9 @@ export class RecipesService {
     private port: string = '62101'; 
     //private baseref: string = ''
     //private port: string = ''; 
-    private recipesUrl: string = this.baseref + this.port +'/Api/Recipes';
-
+    private recipesUrl: string = this.baseref + this.port + '/Api/Recipes';
+    private basketUrl: string = this.baseref + this.port + '/Api/Basket';
+    
     constructor(private authHttp: AuthHttp) { }
 
     getRecipes(): Observable<any[]>{
@@ -23,6 +24,24 @@ export class RecipesService {
     getRecipe(id: number): Observable<any[]> {
         return this.authHttp.get(this.recipesUrl + '/' + id).map(this.extractData)
             .catch(this.handleError);
+    }
+
+    getBasketItems(): Observable<any[]> {
+        return this.authHttp.get(this.basketUrl).map(this.extractData)
+            .catch(this.handleError);
+    }
+
+    addRecipeIngredientsToBasket(recipeId: number): Observable<any[]> {
+            console.log('adding new supplier...');
+            let bodyString = JSON.stringify(supplier);
+            let headers = new Headers({ 'Content-Type': 'application/json' });
+            let options = new RequestOptions({ headers: headers });
+
+            return this.authHttp.post(this.basketUrl, bodyString, options)
+                .map(this.extractData)
+                .catch(this.handleError);
+
+        }
     }
 
     private extractData(res: Response) {

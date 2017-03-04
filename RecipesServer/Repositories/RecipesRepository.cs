@@ -3,6 +3,7 @@ using Recipes.Interfaces;
 using Recipes.Models;
 using System;
 using System.Data.Entity;
+using System.Data.Entity.SqlServer;
 using System.Linq;
 
 namespace Recipes.Repositories
@@ -21,8 +22,13 @@ namespace Recipes.Repositories
                         Name = r.Name,
                         DiffLevel = r.DiffLevel,
                         Description = r.Description,
+                        PhotoUrl = r.PhotoUrl,
                         PrepTime = r.PrepTime,
                         CreatedDate = r.CreatedDate,
+                        DisplayDate = SqlFunctions.StringConvert((double)
+                                        SqlFunctions.DatePart("m", r.CreatedDate)).Trim() + "/" +
+                                        SqlFunctions.DateName("dd", r.CreatedDate) + "/" +
+                                SqlFunctions.DateName("yyyy", r.CreatedDate),
                         Steps = db.Steps.Where(s => s.RecipeId == r.Id),
                         Ingredients = db.Ingredients.Where(s => s.RecipeId == r.Id)
                     }).FirstOrDefault();

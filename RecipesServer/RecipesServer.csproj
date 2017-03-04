@@ -186,7 +186,11 @@
     <Compile Include="App_Start\JsonWebTokenValidationHandler.cs" />
     <Compile Include="App_Start\SessionAuthenticationConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\BasketController.cs" />
     <Compile Include="Controllers\RecipesController.cs" />
+    <Compile Include="DAL\Basket.cs">
+      <DependentUpon>RecipesModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="DAL\Ingredient.cs">
       <DependentUpon>RecipesModel.tt</DependentUpon>
     </Compile>
@@ -211,10 +215,17 @@
     <Compile Include="DAL\Step.cs">
       <DependentUpon>RecipesModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="DAL\User.cs">
+      <DependentUpon>RecipesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\UserRecipe.cs">
+      <DependentUpon>RecipesModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IBasketRepository.cs" />
+    <Compile Include="Interfaces\IUserRepository.cs" />
     <Compile Include="LoginCallback.ashx.cs">
       <DependentUpon>LoginCallback.ashx</DependentUpon>
     </Compile>
@@ -223,6 +234,7 @@
     <Compile Include="Interfaces\IRecipesRepository.cs" />
     <Compile Include="Repositories\BasketRepository.cs" />
     <Compile Include="Repositories\RecipesRepository.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Resolver\UnityResolver.cs" />
   </ItemGroup>
   <ItemGroup>

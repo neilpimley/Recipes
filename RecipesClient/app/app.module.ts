@@ -18,6 +18,7 @@ import { AuthProvider } from './services/auth.provider';
 
 import { LoginComponent } from './components/login.component';
 import { RecipesListComponent } from './components/recipes-list.component';
+import { RecipeDetailComponent } from "./components/recipe-detail.component";
 
 import { CollapseModule } from 'ng2-bootstrap';
 
@@ -37,7 +38,8 @@ import { CollapseModule } from 'ng2-bootstrap';
       AppComponent,
       routedComponents,
       LoginComponent,
-      RecipesListComponent
+      RecipesListComponent,
+      RecipeDetailComponent
   ],
   providers: [
       RecipesService,

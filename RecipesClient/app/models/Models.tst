@@ -24,7 +24,7 @@ module ConstructionClient {
 
     // More info: http://frhagn.github.io/Typewriter/
 
-    $Classes(Recipes.DAL.*)[
+    $Classes(*Dto)[
     export class $Name {
         $Properties[
         // $LoudName

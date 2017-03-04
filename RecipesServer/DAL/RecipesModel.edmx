@@ -5,6 +5,14 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="RecipesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Basket">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="IngredientId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Ingredients">
           <Key>
             <PropertyRef Name="Id" />
@@ -23,6 +31,7 @@
           <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
           <Property Name="PrepTime" Type="time" Precision="7" Nullable="false" />
           <Property Name="CreatedDate" Type="date" Nullable="false" />
+          <Property Name="PhotoUrl" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Steps">
           <Key>
@@ -32,10 +41,28 @@
           <Property Name="RecipeId" Type="int" Nullable="false" />
           <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserRecipe">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="RecipeId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityContainer Name="RecipesModelStoreContainer">
+          <EntitySet Name="Basket" EntityType="Self.Basket" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Ingredients" EntityType="Self.Ingredients" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Recipes" EntityType="Self.Recipes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Steps" EntityType="Self.Steps" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserRecipe" EntityType="Self.UserRecipe" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -51,11 +78,15 @@
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="PrepTime" Type="Time" Nullable="false" Precision="7" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="PhotoUrl" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityContainer Name="RecipesEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Recipes" EntityType="Self.Recipe" />
           <EntitySet Name="Ingredients" EntityType="RecipesModel.Ingredient" />
           <EntitySet Name="Steps" EntityType="RecipesModel.Step" />
+          <EntitySet Name="Baskets" EntityType="RecipesModel.Basket" />
+          <EntitySet Name="Users" EntityType="RecipesModel.User" />
+          <EntitySet Name="UserRecipes" EntityType="RecipesModel.UserRecipe" />
         </EntityContainer>
         <EntityType Name="Ingredient">
           <Key>
@@ -73,6 +104,29 @@
           <Property Name="RecipeId" Type="Int32" Nullable="false" />
           <Property Name="Description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="Basket">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="IngredientId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="UserRecipe">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="RecipeId" Type="Int32" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -82,6 +136,7 @@
           <EntitySetMapping Name="Recipes">
             <EntityTypeMapping TypeName="RecipesModel.Recipe">
               <MappingFragment StoreEntitySet="Recipes">
+                <ScalarProperty Name="PhotoUrl" ColumnName="PhotoUrl" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="DiffLevel" ColumnName="DiffLevel" />
@@ -105,6 +160,32 @@
               <MappingFragment StoreEntitySet="Steps">
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Baskets">
+            <EntityTypeMapping TypeName="RecipesModel.Basket">
+              <MappingFragment StoreEntitySet="Basket">
+                <ScalarProperty Name="IngredientId" ColumnName="IngredientId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="RecipesModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserRecipes">
+            <EntityTypeMapping TypeName="RecipesModel.UserRecipe">
+              <MappingFragment StoreEntitySet="UserRecipe">
+                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -10,7 +10,6 @@ namespace Recipes.Interfaces
         IQueryable<Recipe> GetRecipes();
         Recipe AddRecipe(Recipe recipe);
         Recipe UpdateRecipe(int id, Recipe recipe);
-
     }     
        
 }

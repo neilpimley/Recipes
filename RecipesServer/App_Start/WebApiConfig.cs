@@ -18,6 +18,8 @@ namespace Recipes.App_Start
             // Web API configuration and services
             var container = new UnityContainer();
             container.RegisterType<IRecipesRepository, RecipesRepository>(new HierarchicalLifetimeManager());
+            container.RegisterType<IBasketRepository, BasketRepository>(new HierarchicalLifetimeManager());
+            container.RegisterType<IUserRepository, UserRepository>(new HierarchicalLifetimeManager());
             config.DependencyResolver = new UnityResolver(container);
 
             // Web API routes

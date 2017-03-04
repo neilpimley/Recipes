@@ -5,7 +5,8 @@ import { AuthService }      from '../services/auth.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalModule } from "ng2-modal";
-import { SimpleNotificationsModule, NotificationsService } from 'angular2-notifications'
+import { SimpleNotificationsModule, NotificationsService } from 'angular2-notifications';
+import { RecipeDetailComponent } from "./recipe-detail.component";
 
 @Component({
     selector: 'recipes-list',
@@ -20,82 +21,47 @@ import { SimpleNotificationsModule, NotificationsService } from 'angular2-notifi
                 <div class="col-md-8">
                     <ng-table [config]="config" (tableChanged)="onChangeTable(config)" (cellClicked)="onCellClick($event)"
                               [rows]="rows" [columns]="columns"></ng-table>
-                    <table class="table table-stripped">
-                    <thead>
-                        <tr>
-                             <th>Name</th>
-                            <th>Difficulty Level</th>
-                            <th>Description</th>
-                            <th>Preperation Time</th>
-                            <th>Created Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                         <tr *ngFor="let recipe of recipes">
-                            <td>{{ recipe.name}}</td>
-                            <td>{{ recipe.diffLevel }}</td>
-                            <td>{{ recipe.description}}</td>
-                            <td>{{ recipe.prepTime }}</td>
-                            <td>{{ recipe.createdDate }}</td>
-                          </tr>
-                    </tbody>
-                    </table>
                 </div>
                 <div class="col-md-4">
                     <div class="row">
-                        <table>
-                         </table>
-                    </div>
-                    <div class="row">
-                        <h3>Basket</h3>
-                        <table>
-                            <tr>
-                                <td></td>
-                            </tr>
-                         </table>
+                        <h4 *ngIf="authService.authenticated() && authService.userProfile">{{authService.userProfile.name}}'s Basket</h4>
+                        <ul>
+                             <li *ngFor="let item of basket">{{item.description}}</li>
+                         </ul>
+                        <div *ngIf="basket.length == 0" class="alert alert-warning">no items in basket</div>
+                    </div>                    
+                    <div class="row" *ngIf="selectedRecipe">
+                        <recipe-detail [RecipeId]="selectedRecipeId" (messageOut)="showMessage($event);"></recipe-detail>
+                        <button class="btn btn-success" (click)="addIngredients()">Add ingredients to basket</button>
+                        <button class="btn btn-primary" (click)="bake()">Bake!</button>
                     </div>
                 </div>
             </div>
         </div>
         <simple-notifications [options]="toastOptions"></simple-notifications>
-        <modal #allocateSiteModal modalClass="modal-sm">
-            <modal-header>
-                <h3>Allocate worker</h3>
-            </modal-header>
-                <modal-content>
-                    <button *ngFor="let site of sites; let i = index;"
-                            class="btn btn-default btn-block btn-sm"
-                            [style.backgroundColor]="site.bgColour"
-                            [style.color]="site.fgColour"
-                            (click)="addWork(site.id);allocateSiteModal.close()">
-                        {{site.siteName}}
-                    </button>
-                </modal-content>
-                <modal-footer>
-                    <button class="btn btn-sm btn-danger btn-block"
-                            (click)="removeWork();allocateSiteModal.close()">
-                        Not working
-                    </button>
-                </modal-footer>
-        </modal>
         `
 })
 export class RecipesListComponent {
     public title: string = 'Recipes'
     public rows: Array<any> = [];
     public columns: Array<any> = [
-        { title: 'Name', name: 'name', filtering: { filterString: '', placeholder: 'Filter by name' } },
-        { title: 'Description', name: 'Description' },
-        { title: 'Prep. time', name: 'PrepTime', filtering: { filterString: '', placeholder: 'Filter by prep time' } },
-        { title: 'Diff. Level', name: 'DiffLevel', filtering: { filterString: '', placeholder: 'Filter by diff. level' } },
-        { title: 'Date', name: 'createdDate', filtering: { filterString: '', placeholder: 'Filter Date' } }
+        {
+            title: 'Name',
+            name: 'name',
+            filtering: { filterString: '', placeholder: 'Filter by name' }
+        },
+        { title: 'Prep. time', name: 'prepTime', sort: 'asc'},
+        {
+            title: 'Diff. Level', name: 'diffLevel', sort: 'asc'
+        },
+        { title: 'Date', name: 'createdDate', sort: 'asc' }
     ];
     public page: number = 1;
     public itemsPerPage: number = 10;
     public maxSize: number = 5;
     public numPages: number = 1;
     public length: number = 0;
-
+    public selectedRecipeId: number = -1;
     public config: any = {
         paging: true,
         sorting: { columns: this.columns },
@@ -104,6 +70,8 @@ export class RecipesListComponent {
     };
 
     public recipes: any[] = [];
+    public selectedRecipe: any;
+    public basket: any[] = [];
     public allocateSiteModal: any;
     public toastOptions = {
         position: ["bottom", "right"],
@@ -111,6 +79,7 @@ export class RecipesListComponent {
         lastOnBottom: true
     };
 
+    public loadingBasket: boolean = false;
     public loadingRecipes: boolean = false;
 
     constructor(private recipesService: RecipesService,
@@ -129,9 +98,26 @@ export class RecipesListComponent {
             });
     };
 
+    getBasket() {
+        this.loadingBasket = true;
+        this.recipesService.getBasketItems().subscribe(ingredients => {
+            this.basket = ingredients as any[];
+            this.loadingBasket = false;
+        }, error => {
+            this.notificationsService.error('Error', error, { timeOut: 0 });
+        });
+    };
+
     ngOnInit() {
         this.getRecipes();
         this.onChangeTable(this.config);
+    }
+
+    public addIngredients() {
+        this.recipesService.addRecipeIngredientsToBasket()
+    }
+
+    public bake() {
     }
 
     public changePage(page: any, data: Array<any> = this.recipes): Array<any> {
@@ -176,7 +162,7 @@ export class RecipesListComponent {
         this.columns.forEach((column: any) => {
             if (column.filtering) {
                 filteredData = filteredData.filter((item: any) => {
-                    return item[column.name].match(column.filtering.filterString);
+                    return item[column.name].toLowerCase().match(column.filtering.filterString.toLowerCase());
                 });
             }
         });
@@ -187,14 +173,14 @@ export class RecipesListComponent {
 
         if (config.filtering.columnName) {
             return filteredData.filter((item: any) =>
-                item[config.filtering.columnName].match(this.config.filtering.filterString));
+                item[config.filtering.columnName].toLowerCase().match(this.config.filtering.filterString.toLowerCase()));
         }
 
         let tempArray: Array<any> = [];
         filteredData.forEach((item: any) => {
             let flag = false;
             this.columns.forEach((column: any) => {
-                if (item[column.name].toString().match(this.config.filtering.filterString)) {
+                if (item[column.name].toString().toLowerCase().match(this.config.filtering.filterString.toLowerCase())) {
                     flag = true;
                 }
             });
@@ -230,7 +216,13 @@ export class RecipesListComponent {
     }
 
     public onCellClick(data: any): any {
-        console.log(data);
+        this.selectedRecipe = data["row"];
+        this.selectedRecipeId = this.selectedRecipe.id;
+        console.log(this.selectedRecipe);
+    }
+
+    showMessage(event: any) {
+        this.notificationsService.error('Unexpected error', event, { timeOut: 0 });
     }
 
 }

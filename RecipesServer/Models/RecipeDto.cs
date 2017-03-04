@@ -8,6 +8,7 @@ namespace Recipes.Models
 {
     public class RecipeDto : Recipe
     {
+        public string DisplayDate { get; set; }
         public IEnumerable<Step> Steps { get; set;  }
         public IEnumerable<Ingredient> Ingredients { get; set; }
 

@@ -28,5 +28,8 @@ namespace Recipes.DAL
         public virtual DbSet<Recipe> Recipes { get; set; }
         public virtual DbSet<Ingredient> Ingredients { get; set; }
         public virtual DbSet<Step> Steps { get; set; }
+        public virtual DbSet<Basket> Baskets { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserRecipe> UserRecipes { get; set; }
     }
 }

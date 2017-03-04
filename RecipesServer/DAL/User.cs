@@ -12,14 +12,9 @@ namespace Recipes.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class Recipe
+    public partial class User
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public int DiffLevel { get; set; }
-        public string Description { get; set; }
-        public System.TimeSpan PrepTime { get; set; }
-        public System.DateTime CreatedDate { get; set; }
-        public string PhotoUrl { get; set; }
+        public string Email { get; set; }
     }
 }

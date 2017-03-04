@@ -277,3 +277,4 @@ __pycache__/
 #angular2 compiled files
 app/**/*.js
 *.js.map
+*.log

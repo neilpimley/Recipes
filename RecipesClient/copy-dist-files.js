@@ -3,8 +3,6 @@ var resources = [
   'node_modules/core-js/client/shim.min.js',
   'node_modules/zone.js/dist/zone.min.js',
   'node_modules/bootstrap/dist/css/bootstrap.min.css',
-  'node_modules/ag-grid/dist/styles/ag-grid.css',
-  'node_modules/ag-grid/dist/styles/theme-fresh.css',
   'css/typography.css'
 ];
 resources.map(function (f) {
@@ -17,7 +15,10 @@ var images = [
   'images/gears.gif',
   'images/loader.gif',
   'images/newlogo.png',
-  'images/logo_grey_services.png'
+  'images/logo_grey_services.png',
+  'maple-glazed-brioche-bun.jpg',
+  'milk-rolls-with-bacon.jpg',
+  'smoked-ham-cheese-pancakes.jpg'
 ];
 
 images.map(function (f) {
